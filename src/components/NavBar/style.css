@@ -1,0 +1,12 @@
+.logo{
+    border-radius: 10px;
+}
+
+.logoContainer{
+    flex-direction: row;
+    margin-right: 10%;
+}
+
+.link:hover{
+    color: #0056b3;
+}
