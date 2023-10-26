@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './style.css'
 import db from "../../firebase/firebaseSetup";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 export default function Formulario() {
     const [nome, setNome] = useState('');
     const [rg, setRg] = useState('');
     const [nomeMae, setNomeMae] = useState('');
     const [email, setEmail] = useState('');
-    const [ultimoId, setUltimoId] = useState(0); 
+    const [ultimoId, setUltimoId] = useState(0);
+    const [rgExistente, setRgExistente] = useState(false); 
+
+    useEffect(() => {
+        const verificaRgExistente = async () => {
+            const q = query(collection(db, "Inscricao_bike"), where("rg", "==", rg));
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.size > 0) {
+                setRgExistente(true);
+            } else {
+                setRgExistente(false);
+            }
+        };
+
+        if (rg) {
+            verificaRgExistente();
+        }
+    }, [rg]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,7 +33,7 @@ export default function Formulario() {
         const proximoId = ultimoId + 1;
 
         const dados_formulario = {
-            id: proximoId, 
+            id: proximoId,
             nome,
             rg,
             nomeMae,
@@ -63,6 +80,13 @@ export default function Formulario() {
                             required
                         />
                     </div>
+                    
+                    {rgExistente && (
+                        <div className="alert alert-danger">
+                            RG já cadastrado no banco de dados.
+                        </div>
+                    )}
+
                     <div className="form-group">
                         <label className="mb-2 mt-2" htmlFor="email">*Email:</label>
                         <input
@@ -84,9 +108,13 @@ export default function Formulario() {
                         ></input>
                     </div>
                     <div className="botaoConteiner">
-                        <button type="submit" className="btn btn-primary mt-4">
-                            Enviar
-                        </button>
+                        {
+                            rgExistente ? <div></div>
+                            :
+                            <button type="submit" className="btn btn-primary mt-4">
+                                Enviar
+                            </button>
+                        }
                     </div>
                 </div>
             </form>
