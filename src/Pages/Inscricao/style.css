@@ -1,3 +1,5 @@
-.container{
-
+.botaoConteiner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

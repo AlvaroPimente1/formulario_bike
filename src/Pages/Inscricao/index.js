@@ -83,7 +83,7 @@ export default function Formulario() {
                             required
                         ></input>
                     </div>
-                    <div>
+                    <div className="botaoConteiner">
                         <button type="submit" className="btn btn-primary mt-4">
                             Enviar
                         </button>
