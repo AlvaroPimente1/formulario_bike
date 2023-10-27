@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './style.css'
 import db from "../../firebase/firebaseSetup";
+import DatePicker from "../../components/DatePicker";
 import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 export default function Formulario() {
@@ -9,7 +10,8 @@ export default function Formulario() {
     const [nomeMae, setNomeMae] = useState('');
     const [email, setEmail] = useState('');
     const [ultimoId, setUltimoId] = useState(0);
-    const [rgExistente, setRgExistente] = useState(false); 
+    const [rgExistente, setRgExistente] = useState(false);
+    const [ date, setDate ] = useState("");
 
     useEffect(() => {
         const verificaRgExistente = async () => {
@@ -38,6 +40,7 @@ export default function Formulario() {
             rg,
             nomeMae,
             email,
+            date
         };
 
         try {
@@ -47,6 +50,7 @@ export default function Formulario() {
             setRg('');
             setNomeMae('');
             setEmail('');
+            setDate('');
             alert("Documento adicionado com ID: " + docRef.id);
         } catch (error) {
             console.error("Erro ao adicionar documento: ", error);
@@ -107,6 +111,19 @@ export default function Formulario() {
                             required
                         ></input>
                     </div>
+
+                    <div className="form-group">
+                        <label className="mb-2 mt-2">Data de Nascimento:</label>
+                        <input
+                            className="form-control"
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            max={new Date().toISOString().split("T")[0]}
+                            required
+                        />
+                    </div>
+                    
                     <div className="botaoConteiner">
                         {
                             rgExistente ? <div></div>
